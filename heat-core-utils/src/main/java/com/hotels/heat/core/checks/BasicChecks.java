@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 
 import com.hotels.heat.core.handlers.AssertionHandler;
@@ -54,6 +56,8 @@ public class BasicChecks {
     public static final String COOKIE_CHECK_JSON_ELEMENT = "cookieCheck";
     public static final String FIELD_CHECK_JSON_ELEMENT = "fieldCheck";
     public static final String DESCRIPTION_JSON_ELEMENT = "description";
+
+    private final Logger LOGGER = LoggerFactory.getLogger(BasicChecks.class);
 
     private Object responses; // in case of flow, this is the step responses
     private AssertionHandler assertionHandler;
@@ -92,6 +96,7 @@ public class BasicChecks {
             isTestOk &= headerChecks(testCaseParams);
             isTestOk &= cookieChecks(testCaseParams);
         } catch (Exception oEx) {
+            LOGGER.trace("ERROR commonTestValidation", testCaseParams, oEx);
             logUtils.error("Exception: class {}, cause {}, message {}",
                 oEx.getClass(), oEx.getCause(), oEx.getLocalizedMessage());
             throw new HeatException(logUtils.getExceptionDetails() + "localized message: '"

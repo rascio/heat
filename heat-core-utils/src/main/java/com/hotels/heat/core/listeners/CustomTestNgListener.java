@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import junit.runner.BaseTestRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -51,7 +52,7 @@ public class CustomTestNgListener extends TestListenerAdapter {
      */
     @Override
     public void onTestFailure(ITestResult tr) {
-        if (tr.getParameters().length > 0) {
+        if (tr.getParameters().length > 0 && tr.getInstance() instanceof BaseTestRunner) {
             Map<String, String> paramMap = (HashMap<String, String>) tr.getParameters()[0];
             ITestContext testContext = tr.getTestContext();
             //testCaseCompleteID - Example: TEST_SUITE.001

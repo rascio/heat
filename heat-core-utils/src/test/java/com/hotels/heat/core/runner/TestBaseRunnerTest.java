@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,24 +48,24 @@ public class TestBaseRunnerTest {
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysEnv();
 
-        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName0", "001", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName0", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
         //  Only TestSuite
         System.setProperty(EnvironmentHandler.SYS_PROP_HEAT_TEST, "suiteName1");
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
 
-        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName1", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("suiteNameXXX", "001", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName1", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("suiteNameXXX", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
 
         //  TestId and Suite combinations
         System.setProperty(EnvironmentHandler.SYS_PROP_HEAT_TEST, "test_suite_name5" + TestBaseRunner.TESTCASE_ID_SEPARATOR + "001");
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
 
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
 
         /*
@@ -76,9 +76,9 @@ public class TestBaseRunnerTest {
         System.setProperty(EnvironmentHandler.SYS_PROP_HEAT_TEST, "suiteName1,suiteName2,suiteName3");
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
 
-        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName1", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName2", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("suiteNameXXX", "003", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName1", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("suiteName2", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("suiteNameXXX", "003", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
         //  TestId and Suite combinations
         System.setProperty(EnvironmentHandler.SYS_PROP_HEAT_TEST,
@@ -88,14 +88,14 @@ public class TestBaseRunnerTest {
                 + "test_suite_name7");
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
 
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "003", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name6", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name6", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name7", "003", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "003", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name6", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name6", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name7", "003", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
 
         //  TestId and Suite combinations WITH spaces and upper/lower cases
@@ -106,23 +106,23 @@ public class TestBaseRunnerTest {
                 + "   TEST_suite_name7 ");
         TestSuiteHandler.getInstance().getEnvironmentHandler().reloadSysTestIds();
 
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "003", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name6", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name6", "001", "SVC_NAME", "http://my.service.com/svc"));
-        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name7", "003", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name5", "003", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_name6", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name5", "002", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name6", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertFalse(underTest.isTestCaseSkippable("test_suite_name7", "003", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
 
         /*
          *   Missing Common params
          */
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", null, "http://my.service.com/svc"));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", null));
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", null, null));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", null, "http://my.service.com/svc", underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", null, underTest.getInputJsonPath()));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", null, null, underTest.getInputJsonPath()));
         underTest.setInputJsonPath(null);
-        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc"));
+        Assert.assertTrue(underTest.isTestCaseSkippable("test_suite_nameXXX", "001", "SVC_NAME", "http://my.service.com/svc", underTest.getInputJsonPath()));
     }
 
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,6 +202,7 @@ public class RestAssuredRequestMaker {
             }
             logUtils.debug("The response is: {}", serviceResponse.asString());
         } catch (Exception oEx) {
+            LOGGER.trace("Error while executing: {} {}?{}", httpMethod, url, queryParams, oEx);
             logUtils.error("exception --> {}", oEx.getLocalizedMessage());
             if (oEx.getClass().equals(ConnectTimeoutException.class)) {
                 throw new HeatException(this.logUtils.getTestCaseDetails() + "RestAssuredMessages::executeHttpRequest --> Connect Timeout Exception");

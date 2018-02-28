@@ -1,0 +1,50 @@
+{
+    "testSuite":
+            {
+                "generalSettings": {
+                    "httpMethod": "GET"
+                },
+                "jsonSchemas": {
+                    "correctResponse": "correct_schema_path",
+                    "errorResponse": "error_schema_path"
+                },
+                "testCases": [
+                    {
+                        "testName": "TEST NAME",
+                        "testId": 1,
+                        "url":"/get",
+                        "queryParameters": {
+                            "queryParam1": "queryParam1_value"
+                        },
+                        "expects": {
+                            "responseCode": "200",
+                            "fieldCheck": [
+                                {
+                                    "description":"check query params",
+                                    "actualValue":"${path[args.queryParam1]}",
+                                    "expectedValue":"queryParam1_value"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "testName": "TEST 2",
+                        "testId": 2,
+                        "url":"/get",
+                        "queryParameters": {
+                            "queryParam1": "test"
+                        },
+                        "expects": {
+                            "responseCode": "200",
+                            "fieldCheck": [
+                                {
+                                    "description":"description_check_for_test",
+                                    "actualValue":"${path[args.queryParam1]}",
+                                    "expectedValue":"test"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+}

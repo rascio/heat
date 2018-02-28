@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,9 +80,13 @@ public class PropertyHandler {
     public String getProperty(String propertyName) {
         String retrievedProp = null;
         if (!properties.isEmpty()) {
-            retrievedProp = properties.getProperty(propertyName);
-            if (retrievedProp.contains(PlaceholderHandler.PLACEHOLDER_SYMBOL_BEGIN)) {
-                retrievedProp = ((Map<String, String>) placeholderHandler.placeholderProcessString(retrievedProp)).get("DEFAULT");
+            if (properties.containsKey(propertyName)) {
+                retrievedProp = properties.getProperty(propertyName);
+                if (retrievedProp.contains(PlaceholderHandler.PLACEHOLDER_SYMBOL_BEGIN)) {
+                    retrievedProp = ((Map<String, String>) placeholderHandler.placeholderProcessString(retrievedProp)).get("DEFAULT");
+                }
+            } else {
+                logUtils.debug("Missing property " + propertyName);
             }
         } else {
             logUtils.debug("The file containing the environment properties seems to be empty!");

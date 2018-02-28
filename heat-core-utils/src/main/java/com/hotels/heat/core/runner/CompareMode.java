@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class CompareMode extends TestBaseRunner {
         String testCaseId = testCaseParams.get(TestBaseRunner.ATTR_TESTCASE_ID).toString();
         getTestContext().setAttribute(TestBaseRunner.ATTR_TESTCASE_ID, testCaseId);
 
-        if (!super.isTestCaseSkippable(testSuiteName, testCaseId, "", "")) {
+        if (!super.isTestCaseSkippable(testSuiteName, testCaseId, "", "", super.getInputJsonPath())) {
             Map  testCaseParamsElaborated = super.resolvePlaceholdersInTcParams(testCaseParams);
             try {
                 RestAssuredRequestMaker restAssuredRequestMaker = new RestAssuredRequestMaker();

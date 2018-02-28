@@ -4,11 +4,28 @@
 
     <!-- Please do not touch this section: START -->
     <listeners>
-        <listener class-name="com.hotels.heat.core.listeners.CustomTestNgListener"/>
+        <!--<listener class-name="com.hotels.heat.core.listeners.CustomTestNgListener"/>-->
         <listener class-name="com.hotels.heat.core.listeners.CustomJUnitReportListener" />
     </listeners>
+
     <parameter name="envPropFilePath" value="environment.properties"/>
     <!-- Please do not touch this section: END -->
+
+
+    <test name="FIRST_SUITE_FACTORY" enabled="true">
+        <parameter name="inputJsonPath" value="/testCases/ExampleSingleModeTestCases.json"/>
+        <parameter name="enabledEnvironments" value="environment1,environment2"/>
+        <classes>
+            <class name="com.hotels.heat.core.testng.SingleModeFactory"/>
+        </classes>
+    </test>
+    <test name="FIRST_SUITE_FACTORY" enabled="true">
+        <parameter name="inputJsonPath" value="/testCases/TestSingleModeFactory.json"/>
+        <parameter name="enabledEnvironments" value="environment1,environment2"/>
+        <classes>
+            <class name="com.hotels.heat.core.testng.SingleModeFactory"/>
+        </classes>
+    </test>
 
     <test name="FIRST_SUITE" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/ExampleSingleModeTestCases.json"/>
@@ -18,7 +35,14 @@
         </classes>
     </test>
 
-    <test name="GOOGLE_MAPS_ENV1" enabled="true">
+    <test name="FACTORY_GOOGLE_MAPS_ENV1" enabled="true">
+        <parameter name="inputJsonPath" value="/testCases/GmapsSingleModeTestCases.json"/>
+        <parameter name="enabledEnvironments" value="environment1"/>
+        <classes>
+            <class name="com.hotels.heat.core.testng.SingleModeFactory"/>
+        </classes>
+    </test>
+    <test name="GOOGLE_MAPS_ENV1" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/GmapsSingleModeTestCases.json"/>
         <parameter name="enabledEnvironments" value="environment1"/>
         <classes>
@@ -26,7 +50,7 @@
         </classes>
     </test>
 
-    <test name="GOOGLE_MAPS_ENV2" enabled="true">
+    <test name="GOOGLE_MAPS_ENV2" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/GmapsSingleModeTestCases.json"/>
         <parameter name="enabledEnvironments" value="environment2"/>
         <classes>
@@ -34,7 +58,7 @@
         </classes>
     </test>
 
-    <test name="POST_TESTS_ENV3" enabled="true">
+    <test name="POST_TESTS_ENV3" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/GmapsSingleModePostTestCases.json"/>
         <parameter name="enabledEnvironments" value="environment3"/>
         <classes>
@@ -42,7 +66,7 @@
         </classes>
     </test>
 
-    <test name="GOOGLE_FLOW_ENV1" enabled="true">
+    <test name="GOOGLE_FLOW_ENV1" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/GmapFlowModeTestCases.json"/>
         <parameter name="enabledEnvironments" value="environment1"/>
         <classes>
@@ -50,7 +74,7 @@
         </classes>
     </test>
 
-    <test name="GOOGLE_COMPARE_ENV1" enabled="true">
+    <test name="GOOGLE_COMPARE_ENV1" enabled="false">
         <parameter name="inputJsonPath" value="/testCases/GmapsCompareModeTestCases.json"/>
         <parameter name="enabledEnvironments" value="environment1"/>
         <classes>

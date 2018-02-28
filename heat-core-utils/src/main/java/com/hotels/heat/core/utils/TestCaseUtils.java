@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package com.hotels.heat.core.utils;
 
+import static com.hotels.heat.core.runner.TestBaseRunner.NO_INPUT_WEBAPP_NAME;
+import static com.hotels.heat.core.runner.TestBaseRunner.WEBAPP_NAME;
 import static com.jayway.restassured.path.json.JsonPath.with;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -124,16 +125,8 @@ public class TestCaseUtils {
         jsonSchemas = testSuiteJsonPath.get(JSONPATH_JSONSCHEMAS);
     }
 
-    private Iterator<Object[]> getTestCaseIterator(JsonPath testSuiteJsonPath) {
-        List<Object> testCases = testSuiteJsonPath.get(JSONPATH_TEST_CASES);
-        List<Object[]> listOfArray = new ArrayList<>();
-        for (Iterator<Object> testCasesIterator = testCases.iterator(); testCasesIterator.hasNext();) {
-            Object[] array = new Object[1];
-            array[0] = testCasesIterator.next();
-            listOfArray.add(array);
-        }
-        tcArrayIterator = listOfArray.iterator();
-        return tcArrayIterator;
+    private List<Map<String, Object>> getTestCases(JsonPath testSuiteJsonPath) {
+        return testSuiteJsonPath.get(JSONPATH_TEST_CASES);
     }
 
     /**
@@ -142,8 +135,7 @@ public class TestCaseUtils {
      * @param context it is the context of the test. It is managed from TestNG but it can be used to set and read some parameters all over the test suite execution
      * @return the iterator of the test cases described in the json input file
      */
-    public Iterator<Object[]> jsonReader(String testSuiteFilePath, ITestContext context) {
-        Iterator<Object[]> iterator = null;
+    public List<Map<String, Object>> jsonReader(String testSuiteFilePath, ITestContext context) {
         if (logUtils == null) {
             throw new HeatException(logUtils.getExceptionDetails() + "logUtils null");
         }
@@ -151,6 +143,7 @@ public class TestCaseUtils {
             throw new HeatException(logUtils.getExceptionDetails() + "context null");
         }
 
+        List<Map<String, Object>> iterator = null;
         //check if the test suite is runnable (in terms of enabled environments or test suite explicitly declared in the 'heatTest' system property)
         if (isTestSuiteRunnable(context.getName())) {
             File testSuiteJsonFile;
@@ -169,7 +162,7 @@ public class TestCaseUtils {
                 loadGeneralSettings(testSuiteJsonPath);
                 loadPreloadedSection(testSuiteJsonPath);
                 loadJsonSchemaForOutputValidation(testSuiteJsonPath);
-                iterator = getTestCaseIterator(testSuiteJsonPath);
+                iterator = getTestCases(testSuiteJsonPath);
             } catch (Exception oEx) {
                 logUtils.error("catched exception message: '{}' \n cause: '{}'",
                         oEx.getLocalizedMessage(), oEx.getCause());
@@ -195,8 +188,11 @@ public class TestCaseUtils {
      * @return a boolean value: 'true' if the test is runnable, 'false' if it is not.
      */
     public boolean isTestSuiteRunnable(String currentTestSuite) {
+        return isTestSuiteRunnable(TestSuiteHandler.getInstance().getEnvironmentHandler(), currentTestSuite);
+
+    }
+    public static boolean isTestSuiteRunnable(EnvironmentHandler eh, String currentTestSuite) {
         boolean isTSrunnable = false;
-        EnvironmentHandler eh = TestSuiteHandler.getInstance().getEnvironmentHandler();
 
         String enabledEnvironments = eh.getEnabledEnvironments();
         String envUnderTest = eh.getEnvironmentUnderTest();
@@ -332,5 +328,16 @@ public class TestCaseUtils {
             }
         }
         return isValid;
+    }
+
+    public static String processWebAppName(String name, String defValue) {
+        final String result;
+
+        if (name == null || "".equals(name) || NO_INPUT_WEBAPP_NAME.equals(name)) {
+            result = System.getProperty(WEBAPP_NAME, defValue);
+        } else {
+            result = name;
+        }
+        return result;
     }
 }
