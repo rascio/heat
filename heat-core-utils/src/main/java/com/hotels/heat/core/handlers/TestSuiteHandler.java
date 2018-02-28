@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import com.hotels.heat.core.utils.log.LoggingUtils;
  */
 public final class TestSuiteHandler {
 
+    public static final String NOT_DEFINED_SERVICE = "Not Defined Service";
     private static final String NO_INPUT_WEBAPP_NAME = "noInputWebappName";
     private static final String WEBAPP_NAME = "webappName";
-    private static final String NOT_DEFINED_SERVICE = "Not Defined Service";
 
     private static TestSuiteHandler testSuiteHandler;
     private EnvironmentHandler environmentHandler;
@@ -38,7 +38,7 @@ public final class TestSuiteHandler {
     private String webappName;
     private String propertyFilePath;
 
-    private TestSuiteHandler() {
+    public TestSuiteHandler() {
         logUtils = new LoggingUtils();
         tcUtils = new TestCaseUtils();
     }
@@ -60,11 +60,7 @@ public final class TestSuiteHandler {
     }
 
     public void setWebappName(String webappName) {
-        if (NO_INPUT_WEBAPP_NAME.equals(webappName)) {
-            this.webappName = System.getProperty(WEBAPP_NAME, NOT_DEFINED_SERVICE);
-        } else {
-            this.webappName = webappName;
-        }
+        this.webappName = TestCaseUtils.processWebAppName(webappName, NOT_DEFINED_SERVICE);
     }
 
     public void setPropertyFilePath(String propertyFilePath) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015-2017 Expedia Inc.
+ * Copyright (C) 2015-2018 Expedia Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
@@ -75,6 +78,8 @@ public class TestBaseRunner implements RunnerInterface {
     public static final String ENV_PROP_FILE_PATH = "envPropFilePath";
     public static final String INPUT_JSON_PATH = "inputJsonPath";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestBaseRunner.class);
+
     private ITestContext testContext;
 
     private PlaceholderHandler placeholderHandler;
@@ -122,8 +127,11 @@ public class TestBaseRunner implements RunnerInterface {
     @Override
     @DataProvider(name = "provider")
     public Iterator<Object[]> providerJson() {
-        Iterator<Object[]> it = TestSuiteHandler.getInstance().getTestCaseUtils().jsonReader(inputJsonPath, testContext);
-        return it;
+        List<Map<String, Object>> it = TestSuiteHandler.getInstance().getTestCaseUtils().jsonReader(inputJsonPath, testContext);
+        return it.stream()
+            .map(testCase -> new Object[]{testCase})
+            .collect(Collectors.toList())
+            .iterator();
     }
 
     /**
@@ -168,13 +176,14 @@ public class TestBaseRunner implements RunnerInterface {
      * @param currentTestCaseId name of the test case currently in execution
      * @param webappName name of the service under test
      * @param webappPath path of the service under test (basing on the environment)
+     * @param inputJsonPath
      * @return a boolean that indicates if this test case will be skipped
      */
-    public boolean isTestCaseSkippable(String currentTestSuiteName, String currentTestCaseId, String webappName, String webappPath) {
+    public static boolean isTestCaseSkippable(String currentTestSuiteName, String currentTestCaseId, String webappName, String webappPath, String inputJsonPath) {
         boolean thisTestIsSkippable = false;
         TestSuiteHandler testSuiteHandler = TestSuiteHandler.getInstance();
 
-        boolean isParamsValid = testSuiteHandler.getTestCaseUtils().isCommonParametersValid(webappName, webappPath, getInputJsonPath(),
+        boolean isParamsValid = testSuiteHandler.getTestCaseUtils().isCommonParametersValid(webappName, webappPath, inputJsonPath,
                 testSuiteHandler.getLogUtils(), testSuiteHandler.getEnvironmentHandler());
         if (!isParamsValid) {
             thisTestIsSkippable = true; //Skip current test if shared parameters are missing
@@ -202,7 +211,9 @@ public class TestBaseRunner implements RunnerInterface {
             //Skipping current test if there is a list of tests to run (sys property 'heatTest') and the current one is not in that list
             thisTestIsSkippable =  heatTestPropertyList.size() > 0 && !isCurrentInList;
         }
-
+        if (thisTestIsSkippable) {
+            LOGGER.info("Skippable {}.{}", currentTestSuiteName, currentTestCaseId);
+        }
         return thisTestIsSkippable;
     }
 

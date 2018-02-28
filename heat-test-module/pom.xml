@@ -9,7 +9,7 @@
         <dependency>
             <groupId>com.hotels</groupId>
             <artifactId>heat-bundle</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.3-SNAPSHOT</version>
         </dependency>
         <!--<dependency>
             <groupId>com.hotels</groupId>
@@ -23,7 +23,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
 
         <!--webapp name-->
-        <webappUnderTest>GMAPS_DISTANCE</webappUnderTest>
+        <webappUnderTest>WEBAPP_UNDER_TEST</webappUnderTest>
 
 
         <!-- testng.xml for test parallelization -->
